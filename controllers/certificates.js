@@ -1,5 +1,5 @@
 const HttpError = require('../models/http-error');
-const Certificate = require('../models/Certificate');
+const Certificate = require('../models/certificate');
 
 const getAllCertificates = async (req, res, next) => {
     let certificates;
