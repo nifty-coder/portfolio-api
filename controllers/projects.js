@@ -47,7 +47,58 @@ const createProject = async (req, res, next) => {
     res.status(201).json({ project: createdProject.toObject({getters: true}) });
 };
 
+const updateProject = async (req, res, next) => {
+    const {
+        webOrMobile,
+        name,
+        status,
+        date,
+        description,
+        technologies,
+        appLogo,
+        appUrl,
+        githubUrl
+    } = req.body;
+    const prjid = req.params.pid;
+
+    let project;
+    try {
+      project = await Project.findOneAndUpdate({ _id: prjid }, { 
+        $set: {
+            webOrMobile: webOrMobile,
+            name: name,
+            status: status,
+            date: date,
+            description: description,
+            technologies: technologies,
+            appLogo: appLogo,
+            appUrl: appUrl,
+            githubUrl: githubUrl
+        }
+      },
+      { returnDocument: true });
+    } catch (err) {
+        return next(new HttpError('Could not update the project entry, try again.', 500));
+    }
+    
+    res.status(200).json({ project: project.toObject({getters: true}) });
+};
+
+const remove = async (req, res, next) => {
+    const id = req.params.pid;
+
+    try {
+      await Project.deleteOne({ _id: id });          
+    } catch (err) {
+        return next(new HttpError("Couldn't delete.", 500));
+    }
+
+    res.status(200).json({ message: "Deleted!" });
+};
+
 module.exports = {
     getAllProjects,
-    createProject
+    createProject,
+    updateProject,
+    remove
 };

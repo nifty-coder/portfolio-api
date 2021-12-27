@@ -27,7 +27,43 @@ const createCertificate = async (req, res, next) => {
     res.status(201).json({ certificate: createdCertificate.toObject({getters: true}) });
 };
 
+const updateCertificate = async (req, res, next) => {
+    const { course, platform, file, otherInfo } = req.body;
+    const certid = req.params.cid;
+
+    let certificate;
+    try {
+      certificate = await Certificate.findOneAndUpdate({ _id: certid }, { 
+        $set: {
+            course: course,
+            platform: platform,
+            file: file,
+            otherInfo: otherInfo
+        }
+      },
+      { returnDocument: true });
+    } catch (err) {
+        return next(new HttpError('Could not update the certificate, try again.', 500));
+    }
+  
+    res.status(200).json({ certificate: certificate.toObject({getters: true}) });
+};
+
+const remove = async (req, res, next) => {
+    const id = req.params.cid;
+
+    try {
+      await Certificate.deleteOne({ _id: id });          
+    } catch (err) {
+        return next(new HttpError("Couldn't delete.", 500));
+    }
+
+    res.status(200).json({ message: "Deleted!" });
+};
+
 module.exports = {
     getAllCertificates,
-    createCertificate
+    createCertificate,
+    updateCertificate,
+    remove
 };
