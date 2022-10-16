@@ -3,11 +3,12 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const HttpError = require('./models/http-error');
-const projectsRoutes = require('./routes/projects-routes');
-const techStacksRoutes = require('./routes/techs-routes');
-const toolsdbRoutes = require('./routes/toolsdb-routes');
-const certificatesRoutes = require('./routes/certificates-routes');
-const packagesRoutes = require('./routes/packages-routes');
+const basicInfoRoutes = require('./routes/basic-info');
+const projectsRoutes = require('./routes/projects');
+const techStacksRoutes = require('./routes/techs');
+const toolsdbRoutes = require('./routes/toolsdb');
+const certificatesRoutes = require('./routes/certificates');
+const packagesRoutes = require('./routes/packages');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -15,6 +16,7 @@ const port = process.env.PORT || 5000;
 app.use(bodyParser.json());
 app.use(cors());
 
+app.use('/api/basicInfo', basicInfoRoutes);
 app.use('/api/projects', projectsRoutes);
 app.use('/api/techStacks', techStacksRoutes);
 app.use('/api/toolsOrDbs', toolsdbRoutes);
