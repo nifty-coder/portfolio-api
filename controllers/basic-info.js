@@ -1,15 +1,21 @@
 const HttpError = require('../models/http-error');
-const BasicInfo = require('../models/BasicInfo');
+const BasicInfo = require('../models/basic-info');
+const basicInfoDetails = require('../data/basic-info');
 
 const getBasicInfo = async (req, res, next) => {
     let basicInfo;
-    try {
-        basicInfo = await BasicInfo.find({});
-    } catch (err) {
-        return next(new HttpError('Server and database is down.', 500));
-    }
+    basicInfo = await BasicInfo.find({});
+    if(basicInfo.length == 0) {
+        const basicInfoDetailsData = new BasicInfo(basicInfoDetails);
+        try {
+            await basicInfoDetailsData.save();
+        } catch (err) {
+          return next(new HttpError('Could not make an entry, try again.', 500));
+        }
+    } 
+
     res.json({
-        basicInfo: basicInfo.map(pkg => pkg.toObject({getters: true}))
+        basicInfo: basicInfo.map(basicInfoDF => basicInfoDF.toObject({getters: true}))
     });
 };
 
