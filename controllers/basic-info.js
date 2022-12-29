@@ -49,7 +49,7 @@ const updateBasicInfo = async (req, res, next) => {
         return next(new HttpError('Could not update the BasicInfo, try again.', 500));
     }
   
-    res.status(200).json({ basicInfo: updatedBasicInfo.toObject({getters: true}) });
+    res.status(200).json({ basicInfo: updatedBasicInfo.toObject({ getters: true }) });
 };
 
 module.exports = { getBasicInfo, updateBasicInfo };
