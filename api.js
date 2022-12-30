@@ -14,8 +14,8 @@ const packagesRoutes = require('./routes/packages');
 const app = express();
 const port = process.env.PORT || 5000;
 
+app.get('/favicon.ico', (req, res) => res.status(200));
 app.use(bodyParser.json());
-
 app.use(cors({
   allowedHeaders: ['Access-Control-Allow-Origin: *']
 }));
