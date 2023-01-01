@@ -4,12 +4,12 @@ const Certificate = require('../models/certificate');
 const getAllCertificates = async (req, res, next) => {
     let certificates;
     try {
-        certificates = await Certificate.find({});
+        certificates = await Certificate.find({}).lean();
     } catch (err) {
         return next(new HttpError('Server and database is down.', 500));
     }
     res.json({
-        certificates: certificates.map(certificate => certificate.toObject({getters: true}))
+        certificates: certificates.map(certificate => certificate)
     });
 };
 
@@ -24,7 +24,7 @@ const createCertificate = async (req, res, next) => {
         return next(new HttpError('Could not make a certificate entry, try again.', 500));
     }
 
-    res.status(201).json({ certificate: createdCertificate.toObject({getters: true}) });
+    res.status(201).json({ certificate: createdCertificate });
 };
 
 const updateCertificate = async (req, res, next) => {
@@ -41,19 +41,19 @@ const updateCertificate = async (req, res, next) => {
             otherInfo: otherInfo
         }
       },
-      { returnDocument: true });
+      { returnDocument: true }).lean();
     } catch (err) {
         return next(new HttpError('Could not update the certificate, try again.', 500));
     }
   
-    res.status(200).json({ certificate: certificate.toObject({getters: true}) });
+    res.status(200).json({ certificate: certificate });
 };
 
 const remove = async (req, res, next) => {
     const id = req.params.cid;
 
     try {
-      await Certificate.deleteOne({ _id: id });          
+      await Certificate.deleteOne({ _id: id }).lean();          
     } catch (err) {
         return next(new HttpError("Couldn't delete.", 500));
     }

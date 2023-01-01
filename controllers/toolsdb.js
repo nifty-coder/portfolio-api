@@ -4,12 +4,12 @@ const ToolsOrDB = require('../models/toolsdb');
 const getToolsOrDbs = async (req, res, next) => {
     let toolsdbs;
     try {
-        toolsdbs = await ToolsOrDB.find({});
+        toolsdbs = await ToolsOrDB.find({}).lean();
     } catch (err) {
         return next(new HttpError('Server and database is down.', 500));
     }
     res.json({
-       toolsDbs: toolsdbs.map(toolsdb => toolsdb.toObject({getters: true}))
+       toolsDbs: toolsdbs.map(toolsdb => toolsdb)
     });
 };
 
@@ -24,7 +24,7 @@ const createToolOrDbEntry = async (req, res, next) => {
         return next(new HttpError('Could not make a tool or db entry, try again.', 500));
     }
 
-    res.status(201).json({ toolDb: createdToolDbEntry.toObject({getters: true}) });
+    res.status(201).json({ toolDb: createdToolDbEntry });
 };
 
 const updateToolOrDB = async (req, res, next) => {
@@ -39,19 +39,19 @@ const updateToolOrDB = async (req, res, next) => {
             expertiseLevel: expertiseLevel
         }
       },
-      { returnDocument: true });
+      { returnDocument: true }).lean();
     } catch (err) {
         return next(new HttpError('Could not update the tool/db entry, try again.', 500));
     }
   
-    res.status(200).json({ toolDb: toolDb.toObject({getters: true}) });
+    res.status(200).json({ toolDb: toolDb });
 };
 
 const remove = async (req, res, next) => {
     const id = req.params.tid;
 
     try {
-      await ToolsOrDB.deleteOne({ _id: id });          
+      await ToolsOrDB.deleteOne({ _id: id }).lean();          
     } catch (err) {
         return next(new HttpError("Couldn't delete.", 500));
     }

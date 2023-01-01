@@ -14,13 +14,17 @@ const packagesRoutes = require('./routes/packages');
 const api = express();
 const port = process.env.PORT || 5000;
 
-api.get('/favicon.ico', (req, res) => res.status(200));
+api.get('/favicon.ico', (req, res, next) => res.status(200));
 api.use(bodyParser.json());
 api.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
   next();
+});
+
+api.get('/', (req, res, next) => {
+  res.send('Welcome');
 });
 
 api.use('/api/status', statusRoute);
@@ -35,8 +39,8 @@ api.use((err, req, res, next) => {
   return next(new HttpError("Couldn't find this route page. Try again!", 404)); 
 });
  
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rmxwo.mongodb.net/api_db?retryWrites=true&w=majority`)
-.then(() => api.listen(port, () => console.log(`api listening on port ${port}!`)))
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rmxwo.mongodb.net/app_db?retryWrites=true&w=majority`)
+.then(() => api.listen(port, () => console.log(`Api listening on port ${port}!`)))
 .catch(error => console.log(error));
 
 module.exports = api;

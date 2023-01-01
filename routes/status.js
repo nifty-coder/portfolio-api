@@ -5,7 +5,7 @@ const Status = require('../models/status');
 
 router.get('/', async (req, res, next) => {
     let status;
-    status = await Status.find({});
+    status = await Status.find({}).lean();
     if(status.length == 0) {
         const statusData = new Status({ statusCode: 200, status: '', date: new Date().toString() });
         try {
@@ -16,7 +16,7 @@ router.get('/', async (req, res, next) => {
     } 
 
     res.json({
-        status: status.map(statusDF => statusDF.toObject({getters: true}))
+        status: status.map(statusDF => statusDF)
     });
 });
 

@@ -4,12 +4,12 @@ const TechStack = require('../models/techs');
 const getAllTechs = async (req, res, next) => {
     let techs;
     try {
-        techs = await TechStack.find({});
+        techs = await TechStack.find({}).lean();
     } catch (err) {
         return next(new HttpError('Server and database is down.', 500));
     }
     res.json({
-       techs: techs.map(tech => tech.toObject({getters: true}))
+       techs: techs.map(tech => tech)
     });
 };
 
@@ -24,7 +24,7 @@ const createTechStack = async (req, res, next) => {
         return next(new HttpError('Could not make a tech stack entry, try again.', 500));
     }
 
-    res.status(201).json({ technologies: createdTechTB.toObject({getters: true}) });
+    res.status(201).json({ technologies: createdTechTB });
 };
 
 const updateTechStack = async (req, res, next) => {
@@ -39,19 +39,19 @@ const updateTechStack = async (req, res, next) => {
             expertiseLevel: expertiseLevel
         }
       },
-      { returnDocument: true });
+      { returnDocument: true }).lean();
     } catch (err) {
         return next(new HttpError('Could not update the tech stack entry, try again.', 500));
     }
   
-    res.status(200).json({ techStack: techStack.toObject({getters: true}) });
+    res.status(200).json({ techStack: techStack });
 };
 
 const remove = async (req, res, next) => {
     const id = req.params.tid;
 
     try {
-      await TechStack.deleteOne({ _id: id });          
+      await TechStack.deleteOne({ _id: id }).lean();          
     } catch (err) {
         return next(new HttpError("Couldn't delete.", 500));
     }
