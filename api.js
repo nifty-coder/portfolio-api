@@ -11,27 +11,32 @@ const toolsdbRoutes = require('./routes/toolsdb');
 const certificatesRoutes = require('./routes/certificates');
 const packagesRoutes = require('./routes/packages');
 
-const app = express();
+const api = express();
 const port = process.env.PORT || 5000;
 
-app.get('/favicon.ico', (req, res) => res.status(200));
-app.use(bodyParser.json());
-app.use(cors({
-  allowedHeaders: ['Access-Control-Allow-Origin: *']
-}));
+api.get('/favicon.ico', (req, res) => res.status(200));
+api.use(bodyParser.json());
+api.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PATCH,DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+});
 
-app.use('/api/status', statusRoute);
-app.use('/api/basicInfo', basicInfoRoutes);
-app.use('/api/projects', projectsRoutes);
-app.use('/api/techStacks', techStacksRoutes);
-app.use('/api/toolsOrDbs', toolsdbRoutes);
-app.use('/api/certificates', certificatesRoutes);
-app.use('/api/packages', packagesRoutes);
+api.use('/api/status', statusRoute);
+api.use('/api/basicInfo', basicInfoRoutes);
+api.use('/api/projects', projectsRoutes);
+api.use('/api/techStacks', techStacksRoutes);
+api.use('/api/toolsOrDbs', toolsdbRoutes);
+api.use('/api/certificates', certificatesRoutes);
+api.use('/api/packages', packagesRoutes);
 
-app.use((err, req, res, next) => {
+api.use((err, req, res, next) => {
   return next(new HttpError("Couldn't find this route page. Try again!", 404)); 
 });
  
-mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rmxwo.mongodb.net/app_db?retryWrites=true&w=majority`)
-  .then(() => app.listen(port, () => console.log(`App listening on port ${port}!`)))
-  .catch(error => console.log(error));
+mongoose.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@cluster0.rmxwo.mongodb.net/api_db?retryWrites=true&w=majority`)
+.then(() => api.listen(port, () => console.log(`api listening on port ${port}!`)))
+.catch(error => console.log(error));
+
+module.exports = api;
