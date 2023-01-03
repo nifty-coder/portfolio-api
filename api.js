@@ -1,7 +1,7 @@
+require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const cors = require('cors');
 const HttpError = require('./models/http-error');
 const statusRoute = require('./routes/status');
 const basicInfoRoutes = require('./routes/basic-info');
@@ -10,7 +10,7 @@ const techStacksRoutes = require('./routes/techs');
 const toolsdbRoutes = require('./routes/toolsdb');
 const certificatesRoutes = require('./routes/certificates');
 const packagesRoutes = require('./routes/packages');
-
+console.log(process.env);
 const api = express();
 const port = process.env.PORT || 5000;
 
