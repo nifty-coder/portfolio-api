@@ -10,7 +10,7 @@ const techStacksRoutes = require('./routes/techs');
 const toolsdbRoutes = require('./routes/toolsdb');
 const certificatesRoutes = require('./routes/certificates');
 const packagesRoutes = require('./routes/packages');
-console.log(process.env);
+console.log(process.env.NODE_ENV);
 const api = express();
 const port = process.env.PORT || 5000;
 
