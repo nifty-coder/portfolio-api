@@ -6,7 +6,8 @@
   "repository": "https://github.com/nifty-coder/portfolio-api",
   "scripts": {
     "dev": "nodemon api.js",
-    "start": "node api.js"
+    "start": "node api.js",
+    "build": "echo 'Building...'"
   },
   "author": "",
   "license": "ISC",
