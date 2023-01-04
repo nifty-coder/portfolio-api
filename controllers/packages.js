@@ -4,12 +4,12 @@ const Package = require('../models/package');
 const getAllPackages = async (req, res, next) => {
     let packages;
     try {
-        packages = await Package.find({}).lean();
+        packages = await Package.find({});
     } catch (err) {
         return next(new HttpError('Server and database is down.', 500));
     }
     res.json({
-        packages: packages.map(pkg => pkg)
+        packages: packages.map(pkg => pkg.toObject({ getters: true }))
     });
 };
 
@@ -24,7 +24,7 @@ const createPackage = async (req, res, next) => {
         return next(new HttpError('Could not make a package entry, try again.', 500));
     }
 
-    res.status(201).json({ package: createdPackage });
+    res.status(201).json({ package: createdPackage.toObject({ getters: true }) });
 };
 
 const updatePackage = async (req, res, next) => {
@@ -41,19 +41,19 @@ const updatePackage = async (req, res, next) => {
             githubRepo: githubRepo 
         }
       },
-      { returnDocument: true }).lean();
+      { returnDocument: true });
     } catch (err) {
         return next(new HttpError('Could not update the package, try again.', 500));
     }
   
-    res.status(200).json({ package: updPackage });
+    res.status(200).json({ package: updPackage.toObject({ getters: true }) });
 };
 
 const remove = async (req, res, next) => {
     const id = req.params.pid;
 
     try {
-      await Package.deleteOne({ _id: id }).lean();          
+      await Package.deleteOne({ _id: id });          
     } catch (err) {
         return next(new HttpError("Couldn't delete.", 500));
     }

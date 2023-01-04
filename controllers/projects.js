@@ -4,12 +4,12 @@ const Project = require('../models/project');
 const getAllProjects = async (req, res, next) => {
     let projects;
     try {
-        projects = await Project.find({}).lean();
+        projects = await Project.find({});
     } catch (err) {
         return next(new HttpError('Server and database is down.', 500));
     }
     res.json({
-        projects: projects.map(project => project)
+        projects: projects.map(project => project.toObject({ getters: true }))
     });
 };
 
@@ -44,7 +44,7 @@ const createProject = async (req, res, next) => {
         return next(new HttpError('Could not make a project entry, try again.', 500));
     }
 
-    res.status(201).json({ project: createdProject });
+    res.status(201).json({ project: createdProject.toObject({ getters: true }) });
 };
 
 const updateProject = async (req, res, next) => {
@@ -76,19 +76,19 @@ const updateProject = async (req, res, next) => {
             githubUrl: githubUrl
         }
       },
-      { returnDocument: true }).lean();
+      { returnDocument: true });
     } catch (err) {
         return next(new HttpError('Could not update the project entry, try again.', 500));
     }
     
-    res.status(200).json({ project: project });
+    res.status(200).json({ project: project.toObject({ getters: true }) });
 };
 
 const remove = async (req, res, next) => {
     const id = req.params.pid;
 
     try {
-      await Project.deleteOne({ _id: id }).lean();          
+      await Project.deleteOne({ _id: id });          
     } catch (err) {
         return next(new HttpError("Couldn't delete.", 500));
     }

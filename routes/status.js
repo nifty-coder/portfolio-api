@@ -5,7 +5,7 @@ const Status = require('../models/status');
 
 router.get('/', async (req, res, next) => {
     let status;
-    status = await Status.find({}).lean();
+    status = await Status.find({});
     if(status.length == 0) {
         const statusData = new Status({ statusCode: 200, status: '', date: new Date().toString() });
         try {

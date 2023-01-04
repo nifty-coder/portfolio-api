@@ -4,7 +4,7 @@ const basicInfoDetails = require('../data/basic-info');
 
 const getBasicInfo = async (req, res, next) => {
     let basicInfo;
-    basicInfo = await BasicInfo.find({}).lean();
+    basicInfo = await BasicInfo.find({});
     if(basicInfo.length == 0) {
         const basicInfoDetailsData = new BasicInfo(basicInfoDetails);
         try {
@@ -15,7 +15,7 @@ const getBasicInfo = async (req, res, next) => {
     } 
 
     res.json({
-        basicInfo: basicInfo.map(basicInfoDF => basicInfoDF)
+        basicInfo: basicInfo.map(basicInfoDF => basicInfoDF.toObject({ getters: true }))
     });
 };
 
@@ -44,7 +44,7 @@ const updateBasicInfo = async (req, res, next) => {
             description: description
         }
       },
-      { returnDocument: true }).lean();
+      { returnDocument: true });
     } catch (err) {
         return next(new HttpError('Could not update the BasicInfo, try again.', 500));
     }
