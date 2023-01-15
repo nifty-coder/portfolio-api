@@ -23,10 +23,6 @@ api.use((req, res, next) => {
   next();
 });
 
-api.get('/', (req, res, next) => {
-  res.send('Welcome');
-});
-
 api.use('/api/status', statusRoute);
 api.use('/api/basicInfo', basicInfoRoutes);
 api.use('/api/projects', projectsRoutes);
