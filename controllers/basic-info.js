@@ -21,6 +21,7 @@ const getBasicInfo = async (req, res, next) => {
 
 const updateBasicInfo = async (req, res, next) => {
     const {
+        imageUrl,
         name,
         location,
         email,
@@ -35,6 +36,7 @@ const updateBasicInfo = async (req, res, next) => {
     try {
       updatedBasicInfo = await BasicInfo.findOneAndUpdate({ _id: biid }, { 
         $set: {
+            imageUrl: imageUrl,
             name: name,
             location: location,
             email: email,
